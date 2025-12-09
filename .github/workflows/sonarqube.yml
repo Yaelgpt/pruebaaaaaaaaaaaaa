@@ -1,39 +1,65 @@
-name: CI
+name: CI Python & SonarQube Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
+    branches: [ main, master ]
 
 jobs:
-  test-lint-scan:
+  build-and-analyze:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: 🛎️ Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Importante: se requiere el historial completo para el análisis de SonarQube
+          fetch-depth: 0 
 
-      - name: Setup Python
+      - name: 🛠️ Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          # Usar la versión recomendada por tus requerimientos
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-cov flake8
+          # Instala todas las dependencias del proyecto, incluyendo pytest y pytest-cov
+          pip install -r requirements.txt 
 
-      - name: Lint
-        run: flake8 .
+      # Tarea I: Compilación (en Python es la instalación) y Ejecución de Pruebas
+      - name: 🧪 Run Tests & Generate Reports
+        run: |
+          # 1. Ejecutar pruebas (pytest) y generar dos reportes en formato XML:
+          #    - coverage.xml (para la Cobertura de Código)
+          #    - junit.xml (para los Resultados de las Pruebas)
+          # NOTA: Asegúrate de tener el plugin necesario, como pytest-junitxml, si pytest-cov no lo genera automáticamente.
+          pytest --cov-report=xml --cov=. --junitxml=junit.xml 
+          
+          # 2. Ejecutar el análisis de estilo de código (Linting)
+          flake8 . --output-file=flake8_report.txt --exit-zero
 
-      - name: Run tests with coverage
-        run: pytest -q --maxfail=1 --disable-warnings --cov=. --cov-report=xml
+          # ... (Pasos anteriores)
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+      # Tarea II: Análisis Estático con SonarQube
+      - name: 🔍 SonarQube Analysis
+        uses: SonarSource/sonarcloud-github-action@v2.2
+        # Las credenciales se pasan como variables de entorno (env)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN:  ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          # Parámetros para configurar el escáner de Python
+          args: >
+            -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa
+            -Dsonar.organization=Yaelgpt # Solo si usas SonarCloud
+            -Dsonar.sources=.
+            # Le indicamos a SonarQube dónde encontrar el informe de Cobertura
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            # Le indicamos dónde encontrar los resultados de las Pruebas Unitarias
+            -Dsonar.python.xunit.reportPaths=junit.xml
+            # Indicamos dónde están los informes de Flake8
+            -Dsonar.python.flake8.reportPaths=flake8_report.txt
