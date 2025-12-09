@@ -50,9 +50,3 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa 
-            -Dsonar.organization=Yaelgpt 
-            -Dsonar.sources=.
-            -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.python.xunit.reportPaths=junit.xml
-            # ELIMINA CUALQUIER OTRA LÍNEA DE CONFIGURACIÓN AQUÍ
