@@ -55,9 +55,8 @@ jobs:
           # Parámetros para configurar el escáner de Python
           args: >
             -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa
-            -Dsonar.organization=Yaelgpt # Solo si usas SonarCloud
-            -Dsonar.sources=.  # <-- Este debe ser el código fuente principal
-            # ELIMINA ESTA LÍNEA QUE CAUSÓ EL FALLO: -Dsonar.tests=tests
+            -Dsonar.organization=tu_organizacion_en_sonarcloud
+            -Dsonar.sources=.
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.python.xunit.reportPaths=junit.xml
             -Dsonar.python.flake8.reportPaths=flake8_report.txt
