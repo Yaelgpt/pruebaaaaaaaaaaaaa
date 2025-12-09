@@ -56,10 +56,8 @@ jobs:
           args: >
             -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa
             -Dsonar.organization=Yaelgpt # Solo si usas SonarCloud
-            -Dsonar.sources=.
-            # Le indicamos a SonarQube dónde encontrar el informe de Cobertura
+            -Dsonar.sources=.  # <-- Este debe ser el código fuente principal
+            # ELIMINA ESTA LÍNEA QUE CAUSÓ EL FALLO: -Dsonar.tests=tests
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            # Le indicamos dónde encontrar los resultados de las Pruebas Unitarias
             -Dsonar.python.xunit.reportPaths=junit.xml
-            # Indicamos dónde están los informes de Flake8
             -Dsonar.python.flake8.reportPaths=flake8_report.txt
