@@ -42,21 +42,17 @@ jobs:
           # 2. Ejecutar el análisis de estilo de código (Linting)
           flake8 . --output-file=flake8_report.txt --exit-zero
 
-          # ... (Pasos anteriores)
-
-      # Tarea II: Análisis Estático con SonarQube
+# Tarea II: Análisis Estático con SonarQube
       - name: 🔍 SonarQube Analysis
         uses: SonarSource/sonarcloud-github-action@v2.2
-        # Las credenciales se pasan como variables de entorno (env)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
-          # Parámetros para configurar el escáner de Python
           args: >
-            -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa
-            -Dsonar.organization=tu_organizacion_en_sonarcloud
+            -Dsonar.projectKey=Yaelgpt_pruebaaaaaaaaaaaaa 
+            -Dsonar.organization=Yaelgpt 
             -Dsonar.sources=.
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.python.xunit.reportPaths=junit.xml
-            -Dsonar.python.flake8.reportPaths=flake8_report.txt
+            # ELIMINA CUALQUIER OTRA LÍNEA DE CONFIGURACIÓN AQUÍ
