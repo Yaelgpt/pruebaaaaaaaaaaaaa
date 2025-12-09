@@ -26,4 +26,7 @@ pygame>=2.5.0
 
 # Utilidades
 python-dotenv>=1.0.0
+pytest
+pytest-cov
+flake8
 
